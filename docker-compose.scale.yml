@@ -1,0 +1,24 @@
+version: '3'
+services:
+  informix-hqserver:
+      image: "ibmcom/informix-developer-database"
+      container_name: "hqserver"
+      hostname: "hqserver"
+      environment:
+          LICENSE: 'accept'
+          SIZE:    'small'
+          HQSERVER:    'start'
+      ports:
+         - 80:8080
+  informix-server:
+      env_file:
+         - ${PWD}/server.env
+      image: "ibmcom/informix-developer-database"
+      depends_on:
+          - informix-hqserver
+      environment:
+          LICENSE: 'accept'
+          SIZE:    'small'
+          HQSERVER:    'hqserver'
+          HQAGENT:     'start'
+

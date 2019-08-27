@@ -1,0 +1,76 @@
+version: '3'
+services:
+  informix-hqserver:
+      image: "ibmcom/informix-developer-database"
+      container_name: "hqserver"
+      hostname: "hqserver"
+      environment:
+          LICENSE: 'accept'
+          SIZE:    'small'
+          HQSERVER:    'start'
+      ports:
+         - 80:8080
+  informix-server1:
+      image: "ibmcom/informix-developer-database"
+      container_name: "server1"
+      hostname: "server1"
+      depends_on:
+          - informix-hqserver
+      environment:
+          LICENSE: 'accept'
+          SIZE:    'small'
+          HQSERVER:    'hqserver'
+          HQAGENT:     'start'
+          RUN_FILE_POST_INIT: timeseries_generic.sh
+      ports:
+         - 27018:27018
+      volumes:
+          - ${PWD}/informix-server:/opt/ibm/config
+  informix-server2:
+      image: "ibmcom/informix-developer-database"
+      container_name: "server2"
+      hostname: "server2"
+      depends_on:
+          - informix-hqserver
+      environment:
+          LICENSE: 'accept'
+          SIZE:    'small'
+          HQSERVER:    'hqserver'
+          HQAGENT:     'start'
+  data-generator:
+      image: "python:3.6-alpine"
+      depends_on: 
+          - message-broker
+          - data-reader 
+      container_name: "datagen"
+      hostname: "datagen"
+      volumes: 
+         - ${PWD}/data-generator:/usr/src/myapp
+      working_dir: /usr/src/myapp
+      environment:
+          BROKER: 'msgbroker'
+          BROKER_PORT: 1883
+          BROKER_TOPIC: 'datagen/datagen1'
+      entrypoint: python datagen.py     
+  data-reader:
+      image: "python:3.6-alpine"
+      depends_on: 
+         - message-broker
+      container_name: "datareader"
+      hostname: "datareader"
+      volumes: 
+         - ${PWD}/data-reader:/usr/src/myapp
+      working_dir: /usr/src/myapp
+      environment:
+          BROKER: 'msgbroker'
+          BROKER_PORT: 1883
+          BROKER_TOPIC: 'datagen/datagen1'
+          REST_ENDPOINT: 'http://server1:27018/tsdb/tstab_v'
+      entrypoint: python datareader.py     
+  message-broker:
+      image: "eclipse-mosquitto"
+      depends_on: 
+         - informix-server1 
+      container_name: "msgbroker"
+      hostname: "msgbroker"
+

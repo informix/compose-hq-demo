@@ -1,10 +1,3 @@
-## compose-hq-demo
-
-### Default compose file:
-    docker-compose.yml
-
-## Steps
-
 Default compose file:
     docker-compose.yml
 
@@ -19,8 +12,14 @@ Start docker compose:
 Stop and remove volume
     1.  docker-compose down -v
 
-docker-compose up --scale informix-server1=2
 
 
 
-docker-compose up -e NAME=server --scale informix-server=2
+###############################################
+
+
+
+
+
+
+
