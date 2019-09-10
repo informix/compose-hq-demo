@@ -1,4 +1,4 @@
 #!/bin/sh
 
-python -u datareader.py
+#python -u dataquery.py
 tail -f /dev/null

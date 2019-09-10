@@ -1,42 +1,48 @@
 version: '3'
 services:
   informix-hqserver:
-      image: "ibmcom/informix-developer-database"
+      #image: "ibmcom/informix-developer-database"
+      image: "informix-developer-edition"
       container_name: "hqserver"
       hostname: "hqserver"
       environment:
-          LICENSE: 'accept'
-          SIZE:    'small'
+          LICENSE:     'accept'
+          SIZE:        'small'
           HQSERVER:    'start'
       ports:
          - 80:8080
   informix-server1:
-      image: "ibmcom/informix-developer-database"
+      #image: "ibmcom/informix-developer-database"
+      image: "informix-developer-edition"
       container_name: "server1"
       hostname: "server1"
       depends_on:
           - informix-hqserver
       environment:
-          LICENSE: 'accept'
-          SIZE:    'small'
+          LICENSE:     'accept'
+          SIZE:        'small'
           HQSERVER:    'hqserver'
           HQAGENT:     'start'
           RUN_FILE_POST_INIT: timeseries_generic.sh
       ports:
          - 27018:27018
       volumes:
-          - ${PWD}/informix-server:/opt/ibm/config
+          - ${PWD}/informix-server1:/opt/ibm/config
   informix-server2:
-      image: "ibmcom/informix-developer-database"
+      #image: "ibmcom/informix-developer-database"
+      image: "informix-developer-edition"
       container_name: "server2"
       hostname: "server2"
       depends_on:
           - informix-hqserver
       environment:
-          LICENSE: 'accept'
-          SIZE:    'small'
+          LICENSE:     'accept'
+          SIZE:        'small'
           HQSERVER:    'hqserver'
           HQAGENT:     'start'
+          RUN_FILE_POST_INIT: dbaccessdemo.sh
+      volumes:
+          - ${PWD}/informix-server2:/opt/ibm/config
   data-generator:
       image: "python:3.6-alpine"
       depends_on: 
@@ -67,6 +73,20 @@ services:
           BROKER_TOPIC: 'datagen/datagen1'
           REST_ENDPOINT: 'http://server1:27018/tsdb/tstab_v'
       entrypoint: python datareader.py     
+  data-query:
+      image: "python:3.6-alpine"
+      depends_on: 
+         - informix-server2 
+      container_name: "dataquery"
+      hostname: "dataquery"
+      volumes: 
+         - ${PWD}/data-query:/usr/src/myapp
+      working_dir: /usr/src/myapp
+      environment:
+          NUM_THREADS: 10 
+          REST_ENDPOINT: 'http://server2:27018/stores_demo'
+      entrypoint: python dataquery.py     
+      #entrypoint: ./dataquery_entry.sh
   message-broker:
       image: "eclipse-mosquitto"
       depends_on: 
