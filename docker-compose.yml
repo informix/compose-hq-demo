@@ -1,8 +1,7 @@
 version: '3'
 services:
   informix-hqserver:
-      #image: "ibmcom/informix-developer-database"
-      image: "informix-developer-edition"
+      image: "ibmcom/informix-developer-database"
       container_name: "hqserver"
       hostname: "hqserver"
       environment:
@@ -12,8 +11,7 @@ services:
       ports:
          - 80:8080
   informix-server1:
-      #image: "ibmcom/informix-developer-database"
-      image: "informix-developer-edition"
+      image: "ibmcom/informix-developer-database"
       container_name: "server1"
       hostname: "server1"
       depends_on:
@@ -29,8 +27,7 @@ services:
       volumes:
           - ${PWD}/informix-server1:/opt/ibm/config
   informix-server2:
-      #image: "ibmcom/informix-developer-database"
-      image: "informix-developer-edition"
+      image: "ibmcom/informix-developer-database"
       container_name: "server2"
       hostname: "server2"
       depends_on:
@@ -86,7 +83,6 @@ services:
           NUM_THREADS: 10 
           REST_ENDPOINT: 'http://server2:27018/stores_demo'
       entrypoint: python dataquery.py     
-      #entrypoint: ./dataquery_entry.sh
   message-broker:
       image: "eclipse-mosquitto"
       depends_on: 
