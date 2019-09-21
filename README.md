@@ -6,16 +6,16 @@
 ## Steps
 
 ### Start docker compose:
-    1.  In dir where docker-compose project downloaded 
-    2.  chmod 777 -R *
-    2.  docker-compose up 
+    1.  cd to project directory 
+    2.  Run __chmod 777 -R *__
+    2.  Run __docker-compose up__ 
+
+### Up & Running:
+    1.  After a few minutes 2 informix containers will be  start.  With a load placed on both servers.
+    2.  An HQ server will be started 
+    3.  Go to http://<ip address> (user: admin Password: Passw0rd) 
 
 ### Stop and remove Containers & volume
     1.  docker-compose down -v
 
 
-### Build compose (Not used in this demo):
-    1.  In dir where docker-compose.yml exists
-    2.  docker-compose build 
- 
- * Used if you need to build a custom image 
