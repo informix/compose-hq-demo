@@ -9,6 +9,10 @@
 
 ## Quickstart Steps
 
+### Pre-requisites
+1.  docker
+2.  docker-compose
+
 ### Start docker compose:
 1.  cd to project directory 
 2.  Run __chmod -R 777 *__
