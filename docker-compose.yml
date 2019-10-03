@@ -21,7 +21,7 @@ services:
           SIZE:        'small'
           HQSERVER:    'hqserver'
           HQAGENT:     'start'
-          RUN_FILE_POST_INIT: timeseries_generic.sh
+          RUN_FILE_POST_INIT: post_setup.sh
       ports:
          - 27018:27018
       volumes:
@@ -37,7 +37,7 @@ services:
           SIZE:        'small'
           HQSERVER:    'hqserver'
           HQAGENT:     'start'
-          RUN_FILE_POST_INIT: dbaccessdemo.sh
+          RUN_FILE_POST_INIT: post_setup.sh
       volumes:
           - ${PWD}/informix-server2:/opt/ibm/config
   data-generator:

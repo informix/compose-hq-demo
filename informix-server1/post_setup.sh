@@ -26,3 +26,7 @@ done
 
 wait_for_sysadmin
 setup_system
+
+curl -X PUT -basic -u admin:Passw0rd -H 'Content-Type: application/json' -H 'Accept: application/json' http://hqserver:8080/api/informix/2/monitoring --data-binary "{sensors: [ {'type': 'diskio', 'runInterval': 15, 'dataRetention': 30, 'disabled': false}, {'type': 'vps', 'runInterval': 60, 'dataRetention': 30, 'disabled': false} ] } "
+
+
